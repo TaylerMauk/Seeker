@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace SeekerCore
+namespace SeekerCore.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
