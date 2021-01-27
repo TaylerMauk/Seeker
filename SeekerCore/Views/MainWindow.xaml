@@ -157,7 +157,7 @@
 
                             <TextBlock Text="Search Translation" FontWeight="Bold" />
                             <Separator />
-                            <TextBlock Text="Find files whose name..." Margin="10px 0" />
+                            <TextBlock Text="Find files whose names..." Margin="10px 0" TextWrapping="WrapWithOverflow" />
                             <Separator Height="20px" Background="Transparent" />
 
                             <TextBlock Text="Syntax Guide" FontWeight="Bold" />
