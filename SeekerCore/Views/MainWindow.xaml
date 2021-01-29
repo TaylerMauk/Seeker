@@ -1,9 +1,9 @@
-﻿<Window x:Class="SeekerCore.MainWindow"
+﻿<Window x:Class="SeekerCore.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SeekerCore"
+        xmlns:local="clr-namespace:SeekerCore.Views"
         mc:Ignorable="d"
         Background="{StaticResource WindowMainBackgoundBrush}"
         ResizeMode="CanResize"
@@ -157,7 +157,7 @@
 
                             <TextBlock Text="Search Translation" FontWeight="Bold" />
                             <Separator />
-                            <TextBlock Text="Find files whose name..." Margin="10px 0" />
+                            <TextBlock Text="Find files whose names..." Margin="10px 0" TextWrapping="WrapWithOverflow" />
                             <Separator Height="20px" Background="Transparent" />
 
                             <TextBlock Text="Syntax Guide" FontWeight="Bold" />
