@@ -10,18 +10,28 @@ __declspec(dllexport) void __stdcall FindFiles(const CriteriaInfo* criteria, con
 {
     std::vector<std::string> resultFiles;
 
-    CriteriaInfo* pSearchCriteriaL = new CriteriaInfo[searchParameters.criteriaCount];
+    CriteriaInfo* pSearchCriteria = new CriteriaInfo[searchParameters.criteriaCount];
 
-    int flipflopCriteriaCount = 0;
-    int singleCriteriaCount = 0;
+    int requiredCriteriaThreshold = 0;
+    int resumeIndex = 0;
     size_t tmpLength;
     for (int i = 0; i < searchParameters.criteriaCount; ++i)
     {
         // Enumerate number of FLIPFLOP and SINGLE criteria
-        if (criteria[i].type & CriteriaType::FLIPFLOP)
-            ++flipflopCriteriaCount;
+        if (i > resumeIndex && criteria[i].type & CriteriaType::FLIPFLOP)
+        {
+            // Count entire FlipFlop chain
+            resumeIndex = i + 1;
+            while (resumeIndex < searchParameters.criteriaCount && criteria[resumeIndex].type & CriteriaType::FLIPFLOP)
+                ++resumeIndex;
+
+            // Required threshold is one FlipFlop in chain is satisfied
+            ++requiredCriteriaThreshold;
+        }
         else if (criteria[i].type & CriteriaType::SINGLE)
-            ++singleCriteriaCount;
+        {
+            ++requiredCriteriaThreshold;
+        }
 
         // Allow for case-insensitivity by normalizing to upper
         std::string tmp(criteria[i].keyphrase);
@@ -29,17 +39,14 @@ __declspec(dllexport) void __stdcall FindFiles(const CriteriaInfo* criteria, con
             c = std::toupper(c);
 
         tmpLength = tmp.length();
-        pSearchCriteriaL[i].keyphrase = new char[tmpLength + 1];
-        strncpy_s(pSearchCriteriaL[i].keyphrase, tmpLength + 1, tmp.c_str(), tmpLength);
-        pSearchCriteriaL[i].type = criteria[i].type;
+        pSearchCriteria[i].keyphrase = new char[tmpLength + 1];
+        strncpy_s(pSearchCriteria[i].keyphrase, tmpLength + 1, tmp.c_str(), tmpLength);
+        pSearchCriteria[i].type = criteria[i].type;
     }
-
-    // Save candidate threshold of required criteria counts
-    int requiredCriteriaThreshold = (flipflopCriteriaCount / 2) + singleCriteriaCount;
 
     try
     {
-        FindFilesRR(pSearchCriteriaL, searchParameters, requiredCriteriaThreshold, resultFiles, outResults.count);
+        FindFilesRR(pSearchCriteria, searchParameters, requiredCriteriaThreshold, resultFiles, outResults.count);
         outResults.entries = GetNativeToManagedStringArray(&resultFiles);
     }
     catch (const std::exception& e)
@@ -47,7 +54,7 @@ __declspec(dllexport) void __stdcall FindFiles(const CriteriaInfo* criteria, con
         std::cout << "FindFiles: " << e.what() << std::endl;
     }
 
-    delete[] pSearchCriteriaL;
+    delete[] pSearchCriteria;
 }
 
 __declspec(dllexport) void __stdcall GetSubdirectories(const char* directory, SearchResults& outResults)
@@ -173,8 +180,8 @@ void FindFilesRR(const CriteriaInfo* criteria, const SearchParameters searchPara
                         {
                             ++criteriaMatched;
 
-                            // Skip next criterion if flipflop, it is already satisfied
-                            if (criteria[i + 1].type & CriteriaType::FLIPFLOP)
+                            // Skip rest of FlipFlop chain, it is already satisfied
+                            while (i + 1 < searchParameters.criteriaCount && criteria[i + 1].type & CriteriaType::FLIPFLOP)
                                 ++i;
                         }
 
@@ -184,8 +191,8 @@ void FindFilesRR(const CriteriaInfo* criteria, const SearchParameters searchPara
                         {
                             ++criteriaMatched;
 
-                            // Skip next criterion if flipflop, it is already satisfied
-                            if (criteria[i + 1].type & CriteriaType::FLIPFLOP)
+                            // Skip rest of FlipFlop chain, it is already satisfied
+                            while (i + 1 < searchParameters.criteriaCount && criteria[i + 1].type & CriteriaType::FLIPFLOP)
                                 ++i;
                         }
 
