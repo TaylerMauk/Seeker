@@ -20,7 +20,7 @@ typedef struct CriteriaInfo
 typedef struct SearchParameters
 {
     int criteriaCount;
-    const char* rootDirectory;
+    char* rootDirectory;
     bool isRecursive;
 };
 

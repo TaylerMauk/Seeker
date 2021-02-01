@@ -151,8 +151,10 @@ void FindFilesRR(const CriteriaInfo* criteria, const SearchParameters searchPara
             entryPath = entry.path();
             if (entry.is_directory() && searchParameters.isRecursive)
             {
+                size_t entryPathLength = entryPath.string().length();
                 recurseSearchParams.criteriaCount = searchParameters.criteriaCount;
-                recurseSearchParams.rootDirectory = entryPath.string().c_str();
+                recurseSearchParams.rootDirectory = new char[entryPathLength + 1];
+                strncpy_s(recurseSearchParams.rootDirectory, entryPathLength + 1, entryPath.string().c_str(), entryPathLength);
                 recurseSearchParams.isRecursive = searchParameters.isRecursive;
                 FindFilesRR(criteria, recurseSearchParams, requiredCriteriaThreshold, outResults, outResultCount);
             }
