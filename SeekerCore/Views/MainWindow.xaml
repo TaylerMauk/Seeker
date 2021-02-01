@@ -134,8 +134,8 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" Style="{StaticResource MainTextBoxStyle}" />
-                            <Button Grid.Column="1" Style="{StaticResource MainButtonStyle}">Search</Button>
+                            <TextBox x:Name="txtBoxSearchEntry" Grid.Column="0" Style="{StaticResource MainTextBoxStyle}" Text="{Binding SearchPhrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button x:Name="btnStartSearch" Grid.Column="1" Style="{StaticResource MainButtonStyle}" Content="Search" Command="{Binding ExecuteSearchCommand}" />
                         </Grid>
 
                         <StackPanel Margin="10px">
@@ -145,7 +145,7 @@
 
                             <TextBlock Text="Search Directory" FontWeight="Bold" />
                             <Separator />
-                            <TextBlock Text="C:\some\really\long\path\just\to\test\text\wrapping\in\the\current\directory\info" TextWrapping="WrapWithOverflow" Margin="10px 0" />
+                            <TextBlock x:Name="txtBlockSearchDirectory" Text="{Binding SearchDirectory, Mode=OneWay}" TextWrapping="WrapWithOverflow" Margin="10px 0" />
                             <Separator Height="10px" Background="Transparent" />
                             <Button Width="100px" HorizontalAlignment="Right" Style="{StaticResource MainButtonStyle}">Browse...</Button>
                         </StackPanel>
@@ -157,7 +157,8 @@
 
                             <TextBlock Text="Search Translation" FontWeight="Bold" />
                             <Separator />
-                            <TextBlock Text="Find files whose names..." Margin="10px 0" TextWrapping="WrapWithOverflow" />
+                            <TextBlock Text="Find files whose names..." Margin="10px 0" />
+                            <TextBlock x:Name="txtBoxTranslation" Text="{Binding FriendlyTranslation}" Margin="15px 0" TextWrapping="WrapWithOverflow" />
                             <Separator Height="20px" Background="Transparent" />
 
                             <TextBlock Text="Syntax Guide" FontWeight="Bold" />
@@ -173,12 +174,12 @@
 
                             <TextBlock Text="Approximate Search Runtime" FontWeight="Bold" />
                             <Separator />
-                            <TextBlock Text="12345 seconds" Margin="10px 0" />
+                            <TextBlock x:Name="txtBlockSearchRuntime" Text="{Binding SearchRuntime, Mode=OneWay, StringFormat='\{0\} seconds'}" Margin="10px 0" />
                             <Separator Height="20px" Background="Transparent" />
 
                             <TextBlock Text="Number of Results" FontWeight="Bold" />
                             <Separator />
-                            <TextBlock Text="12345" Margin="10px 0" />
+                            <TextBlock x:Name="txtBlockSearchTotalResults" Text="{Binding SearchTotalResultCount, Mode=OneWay}" Margin="10px 0" />
                             <Separator Height="20px" Background="Transparent" />
                         </StackPanel>
                     </StackPanel>
@@ -191,49 +192,13 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <ListBox Grid.Row="0" Style="{StaticResource MainListBoxStyle}">
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="ContextMenu">
-                                <Setter.Value>
-                                    <ContextMenu>
-                                        <MenuItem Header="Show in Explorer" />
-                                        <MenuItem Header="Move to Recycling Bin" />
-                                        <MenuItem Header="Permanently Delete" />
-                                        <MenuItem Header="Shred" />
-                                    </ContextMenu>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBoxItem>Blah</ListBoxItem>
-                    <ListBoxItem>Foo</ListBoxItem>
-                    <ListBoxItem>Bar</ListBoxItem>
-                    <ListBoxItem>Blah</ListBoxItem>
-                    <ListBoxItem>Foo</ListBoxItem>
-                    <ListBoxItem>Bar</ListBoxItem>
-                    <ListBoxItem>Blah</ListBoxItem>
-                    <ListBoxItem>Foo</ListBoxItem>
-                    <ListBoxItem>Bar</ListBoxItem>
-                    <ListBoxItem>Blah</ListBoxItem>
-                    <ListBoxItem>Foo</ListBoxItem>
-                    <ListBoxItem>Bar</ListBoxItem>
-                    <ListBoxItem>Blah</ListBoxItem>
-                    <ListBoxItem>Foo</ListBoxItem>
-                    <ListBoxItem>Bar</ListBoxItem>
-                    <ListBoxItem>Blah</ListBoxItem>
-                    <ListBoxItem>Foo</ListBoxItem>
-                    <ListBoxItem>Bar</ListBoxItem>
-                    <ListBoxItem>Blah</ListBoxItem>
-                    <ListBoxItem>Foo</ListBoxItem>
-                    <ListBoxItem>Bar</ListBoxItem>
+                <ListBox x:Name="listBoxSearchResultEntries" Grid.Row="0" Style="{StaticResource MainListBoxStyle}" ItemsSource="{Binding SearchResultEntries}">
                 </ListBox>
 
                 <StackPanel Grid.Row="1"  Background="{StaticResource WindowTextBrushLight}">
                     <!-- <StackPanel.Resources>
                             <Style BasedOn="{StaticResource MainTextStyle}" TargetType="TextBlock" />
                         </StackPanel.Resources> -->
-
 
                     <TextBlock Text="About the selected file" />
                 </StackPanel>

@@ -9,10 +9,10 @@ namespace SeekerCore.Model
     /// </summary>
     class SearchAgent
     {
-        [DllImport("TestingDll.dll")]
+        [DllImport("SeekerFilesystem.dll")]
         private static extern void FindFiles(CriteriaInfo[] criteria, SearchParameters searchParameters, out SearchResults outResults);
 
-        [DllImport("TestingDll.dll")]
+        [DllImport("SeekerFilesystem.dll")]
         private static extern void GetSubdirectories(string directory, out SearchResults outResults);
 
         public SearchAgent() { }

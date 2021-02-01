@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using SeekerCore.ViewModels;
 
 namespace SeekerCore.Views
 {
@@ -8,9 +9,21 @@ namespace SeekerCore.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        private SearchViewModel m_searchViewModel;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            m_searchViewModel = new SearchViewModel();
+            txtBoxSearchEntry.DataContext = m_searchViewModel;
+            txtBoxTranslation.DataContext = m_searchViewModel;
+            btnStartSearch.DataContext = m_searchViewModel;
+            txtBlockSearchRuntime.DataContext = m_searchViewModel;
+            txtBlockSearchTotalResults.DataContext = m_searchViewModel;
+            txtBlockSearchDirectory.DataContext = m_searchViewModel;
+            btnStartSearch.DataContext = m_searchViewModel;
+            listBoxSearchResultEntries.DataContext = m_searchViewModel;
         }
 
         private void OnWindowStateChanged(object sender, EventArgs e)

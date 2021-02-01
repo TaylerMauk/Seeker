@@ -105,6 +105,10 @@
                                 <Setter TargetName="border" Property="Background" Value="{DynamicResource PressedOverlayBackgroundBrush}" />
                                 <Setter Property="Foreground" Value="{DynamicResource WindowTextBrushLight}" />
                             </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource WindowTextBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource WindowTextBrushDark}" />
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -115,23 +119,25 @@
             <Setter Property="Foreground" Value="{DynamicResource WindowTextBrush}" />
             <Setter Property="CaretBrush" Value="{DynamicResource WindowTextBrush}" />
             <Setter Property="IsTabStop" Value="True" />
-            <Setter Property="Padding" Value="5px"/>
+            <Setter Property="Padding" Value="7px"/>
             <Setter Property="AllowDrop" Value="true"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
-                        <Border x:Name="border" BorderBrush="{DynamicResource TitlebarBackgoundBrush}" BorderThickness="0, 0, 1, 0" Background="{DynamicResource WindowTextBrushLight}">
+                        <Border x:Name="border" BorderBrush="{DynamicResource TitlebarBackgoundBrush}" BorderThickness="0, 0, 2, 0" Background="{DynamicResource WindowTextBrushLight}">
                             <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="border" Property="BorderBrush" Value="#FF51ABB4" />
-                                <Setter Property="BorderThickness" TargetName="border" Value="2" />
+                                <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                                <Setter Property="Padding" Value="5" />
                             </Trigger>
                             <Trigger Property="IsFocused" Value="True">
                                 <Setter TargetName="border" Property="BorderBrush" Value="#FF51ABB4" />
-                                <Setter Property="BorderThickness" TargetName="border" Value="2" />
+                                <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                                <Setter Property="Padding" Value="5" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

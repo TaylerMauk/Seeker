@@ -40,7 +40,7 @@ namespace SeekerCore.Model
         /// <returns>User-friendly translation</returns>
         public string GetFriendlyTranslation(CriteriaInfo[] criteria)
         {
-            StringBuilder translation = new StringBuilder(Environment.NewLine);
+            StringBuilder translation = new StringBuilder();
 
             for (int i = 0; i < criteria.Length; ++i)
             {
@@ -85,6 +85,9 @@ namespace SeekerCore.Model
         /// <returns>True if the phrase is valid</returns>
         public bool IsPhraseValid(string phrase)
         {
+            if (string.IsNullOrEmpty(phrase))
+                return false;
+
             // Do not allow 2 or more special chars next to each other (excluding EXCLUDE_CHAR)
             Regex multipleSpecialCharRegex = new Regex(
                 @"([" + SEPARATOR_CHAR + "\\" + EXCLUDE_CHAR + FLIPFLOP_CHAR + @"]\s*)([" + SEPARATOR_CHAR + FLIPFLOP_CHAR + @"]\s*)+"

@@ -18,8 +18,4 @@
     <ProjectReference Include="..\SeekerFilesystem\SeekerFilesystem.vcxproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
-
 </Project>
