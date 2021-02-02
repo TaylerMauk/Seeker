@@ -17,13 +17,14 @@ namespace SeekerCore.Views
 
             m_searchViewModel = new SearchViewModel();
             txtBoxSearchEntry.DataContext = m_searchViewModel;
-            txtBoxTranslation.DataContext = m_searchViewModel;
+            txtBlockTranslation.DataContext = m_searchViewModel;
             btnStartSearch.DataContext = m_searchViewModel;
             txtBlockSearchRuntime.DataContext = m_searchViewModel;
             txtBlockSearchTotalResults.DataContext = m_searchViewModel;
             txtBlockSearchDirectory.DataContext = m_searchViewModel;
             btnStartSearch.DataContext = m_searchViewModel;
             listBoxSearchResultEntries.DataContext = m_searchViewModel;
+            stackPanelSearchingIndicator.DataContext = m_searchViewModel;
         }
 
         private void OnWindowStateChanged(object sender, EventArgs e)

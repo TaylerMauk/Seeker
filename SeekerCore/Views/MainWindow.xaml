@@ -116,9 +116,10 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0" Height="50px" Visibility="Collapsed">
+                <StackPanel x:Name="stackPanelSearchingIndicator" Grid.Row="0" Height="50px" Visibility="{Binding SearchingIndicatorVisibility, Mode=OneWay}">
                     <StackPanel.Resources>
                         <Style BasedOn="{StaticResource MainTextStyle}" TargetType="TextBlock" />
                     </StackPanel.Resources>
@@ -158,7 +159,7 @@
                             <TextBlock Text="Search Translation" FontWeight="Bold" />
                             <Separator />
                             <TextBlock Text="Find files whose names..." Margin="10px 0" />
-                            <TextBlock x:Name="txtBoxTranslation" Text="{Binding FriendlyTranslation}" Margin="15px 0" TextWrapping="WrapWithOverflow" />
+                            <TextBlock x:Name="txtBlockTranslation" Text="{Binding FriendlyTranslation}" Margin="15px 0" TextWrapping="WrapWithOverflow" />
                             <Separator Height="20px" Background="Transparent" />
 
                             <TextBlock Text="Syntax Guide" FontWeight="Bold" />
@@ -184,6 +185,16 @@
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Style="{StaticResource MainButtonStyle}" Content="Simple" Height="25px" />
+                    <Button Grid.Column="1" Style="{StaticResource MainButtonStyle}" Content="Advanced" Height="25px" />
+                </Grid>
             </Grid>
 
             <Grid Grid.Column="1" Grid.Row="1">
@@ -192,8 +203,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <ListBox x:Name="listBoxSearchResultEntries" Grid.Row="0" Style="{StaticResource MainListBoxStyle}" ItemsSource="{Binding SearchResultEntries}">
-                </ListBox>
+                <ListBox x:Name="listBoxSearchResultEntries" Grid.Row="0" Style="{StaticResource MainListBoxStyle}" ItemsSource="{Binding SearchResultEntries}" />
 
                 <StackPanel Grid.Row="1"  Background="{StaticResource WindowTextBrushLight}">
                     <!-- <StackPanel.Resources>
