@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using SeekerCore.Model;
@@ -134,7 +133,7 @@ namespace SeekerCore.ViewModels
         private SearchAgent m_searchAgent;
         private LanguageParser m_languageParser;
         private CriteriaInfo[] m_searchCriteriaInfo;
-        private SearchResults m_searchResults;
+        private Stopwatch m_searchRuntimeStopwatch;
 
         public SearchViewModel()
         {
@@ -161,13 +160,24 @@ namespace SeekerCore.ViewModels
                     SearchRuntime = 0;
                     SearchingIndicatorVisibility = Visibility.Visible;
                 });
+
+                m_searchRuntimeStopwatch = Stopwatch.StartNew();
             }
             else
             {
+                m_searchRuntimeStopwatch.Stop();
+                SearchRuntime = m_searchRuntimeStopwatch.Elapsed.TotalSeconds;
+
                 Debug.WriteLine("INACTIVE");
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
                     SearchingIndicatorVisibility = Visibility.Collapsed;
+                    if (null != m_searchAgent.Results.entries)
+                    {
+                        foreach (string entry in m_searchAgent.Results.entries)
+                            SearchResultEntries.Add(entry);
+                        SearchTotalResultCount = m_searchAgent.Results.count;
+                    }
                 });
             }
 
@@ -179,7 +189,14 @@ namespace SeekerCore.ViewModels
 
         private void ExecuteSearch()
         {
-            new Thread(new ThreadStart(BeginSearch)).Start();
+            SearchParameters searchParameters = new SearchParameters
+            {
+                criteriaCount = m_searchCriteriaInfo.Length,
+                rootDirectory = SearchDirectory,
+                isRecursive = true
+            };
+
+            m_searchAgent.RunFileSearch(m_searchCriteriaInfo, searchParameters);
         }
 
         private bool CanExecuteSearch()
@@ -190,32 +207,6 @@ namespace SeekerCore.ViewModels
                 return false;
 
             return m_languageParser.IsPhraseValid(m_searchPhrase);
-        }
-
-        private void BeginSearch()
-        {
-            SearchParameters searchParameters = new SearchParameters
-            {
-                criteriaCount = m_searchCriteriaInfo.Length,
-                rootDirectory = SearchDirectory,
-                isRecursive = true
-            };
-
-            Stopwatch searchStopwatch = Stopwatch.StartNew();
-            m_searchResults = m_searchAgent.GetFiles(m_searchCriteriaInfo, searchParameters);
-            searchStopwatch.Stop();
-            SearchRuntime = searchStopwatch.Elapsed.TotalSeconds;
-
-            // Display results
-            App.Current.Dispatcher.Invoke((Action)delegate
-            {
-                if (null == m_searchResults.entries)
-                    return;
-
-                foreach (string entry in m_searchResults.entries)
-                    SearchResultEntries.Add(entry);
-                SearchTotalResultCount = m_searchResults.count;
-            });
         }
     }
 }
