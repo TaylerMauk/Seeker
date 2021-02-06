@@ -13,6 +13,8 @@ namespace SeekerCore.Views
 
             this.Owner = owner;
             this.DataContext = Owner.DataContext;
+
+            txtBoxSearchDirectory.Focus();
         }
 
         private void OnCancelClick(object sender, RoutedEventArgs e)

@@ -133,11 +133,32 @@ namespace SeekerCore.ViewModels
         }
         private string m_newSearchDirectory;
 
+        /// <summary>
+        /// Used when removing a directory from <see cref="SearchDirectories"/>
+        /// </summary>
+        public int SearchDirectoryRemovalIndex
+        {
+            get
+            {
+                return m_searchDirectoryRemovalIndex;
+            }
+            set
+            {
+                m_searchDirectoryRemovalIndex = value;
+
+                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(SearchDirectoryRemovalIndex)));
+                ((RelayCommand)RemoveSearchDirectoryCommand).RaiseCanExecuteChanged();
+            }
+        }
+        private int m_searchDirectoryRemovalIndex;
+
         public ObservableCollection<string> SearchResultEntries { get; private set; }
 
         public ICommand ExecuteSearchCommand { get; set; }
 
         public ICommand AddSearchDirectoryCommand { get; set; }
+
+        public ICommand RemoveSearchDirectoryCommand { get; set; }
 
         private SearchAgent m_searchAgent;
         private LanguageParser m_languageParser;
@@ -146,12 +167,13 @@ namespace SeekerCore.ViewModels
 
         public SearchViewModel()
         {
+            ExecuteSearchCommand = new RelayCommand(ExecuteSearch, CanExecuteSearch);
+            AddSearchDirectoryCommand = new RelayCommand(AddSearchDirectory, CanExecuteAddSearchDirectory);
+            RemoveSearchDirectoryCommand = new RelayCommand(RemoveSearchDirectory, CanExecuteRemoveSearchDirectory);
+
             SearchDirectories = new ObservableCollection<string>();
             SearchResultEntries = new ObservableCollection<string>();
             SearchingIndicatorVisibility = Visibility.Collapsed;
-
-            ExecuteSearchCommand = new RelayCommand(ExecuteSearch, CanExecuteSearch);
-            AddSearchDirectoryCommand = new RelayCommand(AddSearchDirectory, CanExecuteAddSearchDirectory);
 
             m_languageParser = new LanguageParser();
             m_searchAgent = new SearchAgent();
@@ -236,7 +258,18 @@ namespace SeekerCore.ViewModels
 
         private bool CanExecuteAddSearchDirectory()
         {
-            return null != NewSearchDirectory && NewSearchDirectory != string.Empty;
+            return null != NewSearchDirectory && NewSearchDirectory != string.Empty && System.IO.Directory.Exists(NewSearchDirectory);
+        }
+
+        private void RemoveSearchDirectory()
+        {
+            SearchDirectories.RemoveAt(SearchDirectoryRemovalIndex);
+            SearchDirectoryRemovalIndex = -1;
+        }
+
+        private bool CanExecuteRemoveSearchDirectory()
+        {
+            return SearchDirectories.Count != 0 && SearchDirectoryRemovalIndex != -1;
         }
     }
 }
