@@ -16,15 +16,16 @@ namespace SeekerCore.Views
             InitializeComponent();
 
             m_searchViewModel = new SearchViewModel();
-            txtBoxSearchEntry.DataContext = m_searchViewModel;
-            txtBlockTranslation.DataContext = m_searchViewModel;
-            btnStartSearch.DataContext = m_searchViewModel;
-            txtBlockSearchRuntime.DataContext = m_searchViewModel;
-            txtBlockSearchTotalResults.DataContext = m_searchViewModel;
-            txtBlockSearchDirectory.DataContext = m_searchViewModel;
-            btnStartSearch.DataContext = m_searchViewModel;
-            listBoxSearchResultEntries.DataContext = m_searchViewModel;
-            stackPanelSearchingIndicator.DataContext = m_searchViewModel;
+            DataContext = m_searchViewModel;
+            //txtBoxSearchEntry.DataContext = m_searchViewModel;
+            //txtBlockTranslation.DataContext = m_searchViewModel;
+            //btnStartSearch.DataContext = m_searchViewModel;
+            //txtBlockSearchRuntime.DataContext = m_searchViewModel;
+            //txtBlockSearchTotalResults.DataContext = m_searchViewModel;
+            //listBoxSearchDirectories.DataContext = m_searchViewModel;
+            //btnStartSearch.DataContext = m_searchViewModel;
+            //listBoxSearchResultEntries.DataContext = m_searchViewModel;
+            //stackPanelSearchingIndicator.DataContext = m_searchViewModel;
         }
 
         private void OnWindowStateChanged(object sender, EventArgs e)
@@ -62,6 +63,11 @@ namespace SeekerCore.Views
                 this.maximizeButton.Visibility = Visibility.Visible;
                 this.restoreButton.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void OnAddSearchDirectoryButtonClick(object sender, RoutedEventArgs e)
+        {
+            new AddSearchDirectoryDialog(this).ShowDialog();
         }
     }
 }

@@ -125,7 +125,55 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" BorderBrush="{DynamicResource TitlebarBackgoundBrush}" Background="{DynamicResource WindowTextBrushLight}">
+                            <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF51ABB4" />
+                                <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                                <Setter Property="Padding" Value="5" />
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF51ABB4" />
+                                <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                                <Setter Property="Padding" Value="5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SearchEntryBoxStyle" TargetType="TextBox" BasedOn="{StaticResource MainTextBoxStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
                         <Border x:Name="border" BorderBrush="{DynamicResource TitlebarBackgoundBrush}" BorderThickness="0, 0, 2, 0" Background="{DynamicResource WindowTextBrushLight}">
+                            <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF51ABB4" />
+                                <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                                <Setter Property="Padding" Value="5" />
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF51ABB4" />
+                                <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                                <Setter Property="Padding" Value="5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AddSearchDirectoryBoxStyle" TargetType="TextBox" BasedOn="{StaticResource MainTextBoxStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" BorderBrush="{DynamicResource TitlebarBackgoundBrush}" BorderThickness="0, 0, 0, 2" Background="{DynamicResource WindowTextBrushLight}">
                             <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                         </Border>
                         <ControlTemplate.Triggers>

@@ -90,7 +90,7 @@ namespace SeekerCore.ViewModels
                 }
 
                 OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(SearchPhrase)));
-                ((StartSearchCommand)ExecuteSearchCommand).RaiseCanExecuteChanged();
+                ((RelayCommand)ExecuteSearchCommand).RaiseCanExecuteChanged();
             }
         }
         private string m_searchPhrase;
@@ -114,9 +114,30 @@ namespace SeekerCore.ViewModels
         /// </summary>
         public ObservableCollection<string> SearchDirectories { get; set; }
 
+        /// <summary>
+        /// Used when adding a new directory to <see cref="SearchDirectories"/>
+        /// </summary>
+        public string NewSearchDirectory
+        {
+            get
+            {
+                return m_newSearchDirectory;
+            }
+            set
+            {
+                m_newSearchDirectory = value;
+
+                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(NewSearchDirectory)));
+                ((RelayCommand)AddSearchDirectoryCommand).RaiseCanExecuteChanged();
+            }
+        }
+        private string m_newSearchDirectory;
+
         public ObservableCollection<string> SearchResultEntries { get; private set; }
 
         public ICommand ExecuteSearchCommand { get; set; }
+
+        public ICommand AddSearchDirectoryCommand { get; set; }
 
         private SearchAgent m_searchAgent;
         private LanguageParser m_languageParser;
@@ -125,10 +146,12 @@ namespace SeekerCore.ViewModels
 
         public SearchViewModel()
         {
-            ExecuteSearchCommand = new StartSearchCommand(ExecuteSearch, CanExecuteSearch);
             SearchDirectories = new ObservableCollection<string>();
             SearchResultEntries = new ObservableCollection<string>();
             SearchingIndicatorVisibility = Visibility.Collapsed;
+
+            ExecuteSearchCommand = new RelayCommand(ExecuteSearch, CanExecuteSearch);
+            AddSearchDirectoryCommand = new RelayCommand(AddSearchDirectory, CanExecuteAddSearchDirectory);
 
             m_languageParser = new LanguageParser();
             m_searchAgent = new SearchAgent();
@@ -175,7 +198,7 @@ namespace SeekerCore.ViewModels
 
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                ((StartSearchCommand)ExecuteSearchCommand).RaiseCanExecuteChanged();
+                ((RelayCommand)ExecuteSearchCommand).RaiseCanExecuteChanged();
             });
         }
 
@@ -203,6 +226,17 @@ namespace SeekerCore.ViewModels
                 return false;
 
             return m_languageParser.IsPhraseValid(m_searchPhrase);
+        }
+
+        private void AddSearchDirectory()
+        {
+            SearchDirectories.Add(NewSearchDirectory);
+            NewSearchDirectory = string.Empty;
+        }
+
+        private bool CanExecuteAddSearchDirectory()
+        {
+            return null != NewSearchDirectory && NewSearchDirectory != string.Empty;
         }
     }
 }
