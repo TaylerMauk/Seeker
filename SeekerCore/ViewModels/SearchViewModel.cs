@@ -46,23 +46,6 @@ namespace SeekerCore.ViewModels
         private double m_searchRuntime;
 
         /// <summary>
-        /// Directory to begin search
-        /// </summary>
-        public string SearchDirectory
-        {
-            get
-            {
-                return m_searchDirectory;
-            }
-            set
-            {
-                m_searchDirectory = value;
-                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(SearchDirectory)));
-            }
-        }
-        private string m_searchDirectory;
-
-        /// <summary>
         /// User-friendly translation of <see cref="SearchPhrase"/>
         /// </summary>
         public string FriendlyTranslation
@@ -126,9 +109,14 @@ namespace SeekerCore.ViewModels
         }
         private Visibility m_searchingIndicatorVisibility;
 
-        public ICommand ExecuteSearchCommand { get; set; }
+        /// <summary>
+        /// Root directories for search
+        /// </summary>
+        public ObservableCollection<string> SearchDirectories { get; set; }
 
         public ObservableCollection<string> SearchResultEntries { get; private set; }
+
+        public ICommand ExecuteSearchCommand { get; set; }
 
         private SearchAgent m_searchAgent;
         private LanguageParser m_languageParser;
@@ -137,11 +125,13 @@ namespace SeekerCore.ViewModels
 
         public SearchViewModel()
         {
-            m_languageParser = new LanguageParser();
-            m_searchAgent = new SearchAgent();
             ExecuteSearchCommand = new StartSearchCommand(ExecuteSearch, CanExecuteSearch);
+            SearchDirectories = new ObservableCollection<string>();
             SearchResultEntries = new ObservableCollection<string>();
             SearchingIndicatorVisibility = Visibility.Collapsed;
+
+            m_languageParser = new LanguageParser();
+            m_searchAgent = new SearchAgent();
 
             m_searchAgent.StateChanged += OnSearchAgentStateChanged;
         }
@@ -153,6 +143,7 @@ namespace SeekerCore.ViewModels
             if (m_searchAgent.State == SearchAgent.ActivityState.ACTIVE)
             {
                 Debug.WriteLine("ACTIVE");
+
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
                     SearchResultEntries.Clear();
@@ -165,10 +156,11 @@ namespace SeekerCore.ViewModels
             }
             else
             {
+                Debug.WriteLine("INACTIVE");
+
                 m_searchRuntimeStopwatch.Stop();
                 SearchRuntime = m_searchRuntimeStopwatch.Elapsed.TotalSeconds;
 
-                Debug.WriteLine("INACTIVE");
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
                     SearchingIndicatorVisibility = Visibility.Collapsed;
@@ -189,14 +181,18 @@ namespace SeekerCore.ViewModels
 
         private void ExecuteSearch()
         {
-            SearchParameters searchParameters = new SearchParameters
+            SearchParameters searchParameters;
+            for (int i = 0; i < SearchDirectories.Count; ++i)
             {
-                criteriaCount = m_searchCriteriaInfo.Length,
-                rootDirectory = SearchDirectory,
-                isRecursive = true
-            };
+                searchParameters = new SearchParameters
+                {
+                    criteriaCount = m_searchCriteriaInfo.Length,
+                    rootDirectory = SearchDirectories[i],
+                    isRecursive = true
+                };
+                m_searchAgent.RunFileSearch(m_searchCriteriaInfo, searchParameters);
+            }
 
-            m_searchAgent.RunFileSearch(m_searchCriteriaInfo, searchParameters);
         }
 
         private bool CanExecuteSearch()

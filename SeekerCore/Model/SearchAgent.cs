@@ -35,10 +35,19 @@ namespace SeekerCore.Model
 
         public event EventHandler StateChanged;
 
+        /// <summary>
+        /// Number of active threads
+        /// </summary>
+        private int m_threadCount;
+
         public SearchAgent()
         {
             State = ActivityState.INACTIVE;
+            InitializeResultsStruct();
+
+            m_threadCount = 0;
         }
+
 
         /// <summary>
         /// Performs a file search in a new thread and results are stored in <see cref="Results"/>.
@@ -52,12 +61,26 @@ namespace SeekerCore.Model
             if (!Directory.Exists(searchParameters.rootDirectory))
                 throw new DirectoryNotFoundException();
 
+            if (m_threadCount == 0)
+                InitializeResultsStruct();
+
             new Thread(new ThreadStart(() => {
                 SearchResults sr;
-                ToggleState();
+                ActivateThread();
                 FindFiles(criteria, searchParameters, out sr);
-                Results = sr;
-                ToggleState();
+
+                // Keep running list of all results
+                string[] tmpResults = new string[Results.count + sr.count];
+                Results.entries.CopyTo(tmpResults, 0);
+                sr.entries.CopyTo(tmpResults, Results.count);
+                Results = new SearchResults
+                {
+                    count = tmpResults.Length,
+                    entries = new string[tmpResults.Length]
+                };
+                tmpResults.CopyTo(Results.entries, 0);
+
+                DeactivateThread();
             })).Start();
         }
 
@@ -72,26 +95,62 @@ namespace SeekerCore.Model
             if (!Directory.Exists(directory))
                 throw new DirectoryNotFoundException();
 
+            if (m_threadCount == 0)
+                InitializeResultsStruct();
+
             new Thread(new ThreadStart(() => {
                 SearchResults sr;
-                ToggleState();
+                ActivateThread();
                 GetSubdirectories(directory, out sr);
                 Results = sr;
-                ToggleState();
+                DeactivateThread();
             })).Start();
         }
 
         /// <summary>
-        /// Toggles <see cref="State"/> between <see cref="ActivityState"/> states
+        /// Performs subdirectory enumeration
         /// </summary>
-        private void ToggleState()
+        /// <param name="directory"></param>
+        /// <returns></returns>
+        public SearchResults GetSubdirectories(string directory)
         {
-            if (State == ActivityState.ACTIVE)
-                State = ActivityState.INACTIVE;
-            else
-                State = ActivityState.ACTIVE;
+            if (!Directory.Exists(directory))
+                throw new DirectoryNotFoundException();
 
-            StateChanged.Invoke(this, null);
+            SearchResults sr;
+            GetSubdirectories(directory, out sr);
+            return sr;
+        }
+
+        private void ActivateThread()
+        {
+            ++m_threadCount;
+            if (m_threadCount == 1)
+            {
+                // Change state only if this is first active thread
+                State = ActivityState.ACTIVE;
+                StateChanged.Invoke(this, null);
+            }
+        }
+
+        private void DeactivateThread()
+        {
+            --m_threadCount;
+            if (m_threadCount == 0)
+            {
+                // Change state only if there are no more active threads
+                State = ActivityState.INACTIVE;
+                StateChanged.Invoke(this, null);
+            }
+        }
+
+        private void InitializeResultsStruct()
+        {
+            Results = new SearchResults
+            {
+                count = 0,
+                entries = Array.Empty<string>()
+            };
         }
     }
 }
