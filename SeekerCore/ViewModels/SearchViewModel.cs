@@ -129,6 +129,7 @@ namespace SeekerCore.ViewModels
 
                 OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(NewSearchDirectory)));
                 ((RelayCommand)AddSearchDirectoryCommand).RaiseCanExecuteChanged();
+                ((RelayCommand)ExecuteSearchCommand).RaiseCanExecuteChanged();
             }
         }
         private string m_newSearchDirectory;
@@ -148,6 +149,7 @@ namespace SeekerCore.ViewModels
 
                 OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(SearchDirectoryRemovalIndex)));
                 ((RelayCommand)RemoveSearchDirectoryCommand).RaiseCanExecuteChanged();
+                ((RelayCommand)ExecuteSearchCommand).RaiseCanExecuteChanged();
             }
         }
         private int m_searchDirectoryRemovalIndex;
@@ -177,6 +179,7 @@ namespace SeekerCore.ViewModels
 
             m_languageParser = new LanguageParser();
             m_searchAgent = new SearchAgent();
+            m_searchDirectoryRemovalIndex = -1;
 
             m_searchAgent.StateChanged += OnSearchAgentStateChanged;
         }
@@ -189,8 +192,7 @@ namespace SeekerCore.ViewModels
             {
                 Debug.WriteLine("ACTIVE");
 
-                App.Current.Dispatcher.Invoke((Action)delegate
-                {
+                App.Current.Dispatcher.Invoke(() => {
                     SearchResultEntries.Clear();
                     SearchTotalResultCount = 0;
                     SearchRuntime = 0;
@@ -206,8 +208,7 @@ namespace SeekerCore.ViewModels
                 m_searchRuntimeStopwatch.Stop();
                 SearchRuntime = m_searchRuntimeStopwatch.Elapsed.TotalSeconds;
 
-                App.Current.Dispatcher.Invoke((Action)delegate
-                {
+                App.Current.Dispatcher.Invoke(() => {
                     SearchingIndicatorVisibility = Visibility.Collapsed;
                     if (null != m_searchAgent.Results.entries)
                     {
@@ -218,8 +219,7 @@ namespace SeekerCore.ViewModels
                 });
             }
 
-            App.Current.Dispatcher.Invoke((Action)delegate
-            {
+            App.Current.Dispatcher.Invoke(() => {
                 ((RelayCommand)ExecuteSearchCommand).RaiseCanExecuteChanged();
             });
         }
@@ -247,7 +247,7 @@ namespace SeekerCore.ViewModels
             if (m_searchAgent.State == SearchAgent.ActivityState.ACTIVE)
                 return false;
 
-            return m_languageParser.IsPhraseValid(m_searchPhrase);
+            return SearchDirectories.Count > 0 && m_languageParser.IsPhraseValid(m_searchPhrase);
         }
 
         private void AddSearchDirectory()
@@ -269,7 +269,7 @@ namespace SeekerCore.ViewModels
 
         private bool CanExecuteRemoveSearchDirectory()
         {
-            return SearchDirectories.Count != 0 && SearchDirectoryRemovalIndex != -1;
+            return SearchDirectories.Count > 0 && SearchDirectoryRemovalIndex != -1;
         }
     }
 }
