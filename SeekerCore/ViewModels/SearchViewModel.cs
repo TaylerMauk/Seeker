@@ -13,23 +13,6 @@ namespace SeekerCore.ViewModels
     class SearchViewModel : ViewModelBase
     {
         /// <summary>
-        /// Number of results returned from search
-        /// </summary>
-        public int SearchTotalResultCount
-        {
-            get
-            {
-                return m_searchTotalResultCount;
-            }
-            set
-            {
-                m_searchTotalResultCount = value;
-                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(SearchTotalResultCount)));
-            }
-        }
-        private int m_searchTotalResultCount;
-
-        /// <summary>
         /// Approximate runtime of search in seconds
         /// </summary>
         public double SearchRuntime
@@ -155,142 +138,44 @@ namespace SeekerCore.ViewModels
         }
         private int m_searchDirectoryRemovalIndex;
 
-        public ObservableCollection<string> SearchResultEntries { get; private set; }
-
-        /// <summary>
-        /// Index of selected file from search results
-        /// </summary>
-        public int SelectedFileIndex
-        {
-            get
-            {
-                return m_selectedFileIndex;
-            }
-            set
-            {
-                m_selectedFileIndex = value;
-
-                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectedFileIndex)));
-                OnSelectedResultFileIndexChanged();
-            }
-        }
-        private int m_selectedFileIndex;
-
-        public string SelectedFilePath
-        {
-            get
-            {
-                return m_selectedFilePath;
-            }
-            set
-            {
-                m_selectedFilePath = value;
-
-                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectedFilePath)));
-            }
-        }
-        private string m_selectedFilePath;
-
-        public string SelectedFileName
-        {
-            get
-            {
-                return m_selectedFileName;
-            }
-            set
-            {
-                m_selectedFileName = value;
-
-                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectedFileName)));
-            }
-        }
-        private string m_selectedFileName;
-
-        public string SelectedFileLastAccessTime
-        {
-            get
-            {
-                return m_selectedFileLastAccesTime;
-            }
-            set
-            {
-                m_selectedFileLastAccesTime = value;
-
-                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectedFileLastAccessTime)));
-            }
-        }
-        private string m_selectedFileLastAccesTime;
-
-        public string SelectedFileLastWriteTime
-        {
-            get
-            {
-                return m_selectedFileLastWriteTime;
-            }
-            set
-            {
-                m_selectedFileLastWriteTime = value;
-
-                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectedFileLastWriteTime)));
-            }
-        }
-        private string m_selectedFileLastWriteTime;
-
-        public string SelectedFileCreationTime
-        {
-            get
-            {
-                return m_selectedFileCreationTime;
-            }
-            set
-            {
-                m_selectedFileCreationTime = value;
-
-                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectedFileCreationTime)));
-            }
-        }
-        private string m_selectedFileCreationTime;
-
         public ICommand ExecuteSearchCommand { get; set; }
 
         public ICommand AddSearchDirectoryCommand { get; set; }
 
         public ICommand RemoveSearchDirectoryCommand { get; set; }
 
-        private SearchAgent m_searchAgent;
         private LanguageParser m_languageParser;
         private CriteriaInfo[] m_searchCriteriaInfo;
         private Stopwatch m_searchRuntimeStopwatch;
+        private MainViewModel m_mainViewModel;
 
-        public SearchViewModel()
+        public SearchViewModel(MainViewModel mainViewModel)
         {
+            m_mainViewModel = mainViewModel;
+
             ExecuteSearchCommand = new RelayCommand(ExecuteSearch, CanExecuteSearch);
             AddSearchDirectoryCommand = new RelayCommand(AddSearchDirectory, CanExecuteAddSearchDirectory);
             RemoveSearchDirectoryCommand = new RelayCommand(RemoveSearchDirectory, CanExecuteRemoveSearchDirectory);
 
             SearchDirectories = new ObservableCollection<string>();
-            SearchResultEntries = new ObservableCollection<string>();
             SearchingIndicatorVisibility = Visibility.Collapsed;
 
             m_languageParser = new LanguageParser();
-            m_searchAgent = new SearchAgent();
             m_searchDirectoryRemovalIndex = -1;
-            m_selectedFileIndex = -1;
 
-            m_searchAgent.StateChanged += OnSearchAgentStateChanged;
+            m_mainViewModel.MainSearchAgent.StateChanged += OnSearchAgentStateChanged;
         }
 
         private void OnSearchAgentStateChanged(object sender, EventArgs e)
         {
             Debug.Write("SEARCH AGENT STATE CHANGED TO ");
 
-            if (m_searchAgent.State == SearchAgent.ActivityState.ACTIVE)
+            if (m_mainViewModel.MainSearchAgent.State == SearchAgent.ActivityState.ACTIVE)
             {
                 Debug.WriteLine("ACTIVE");
 
                 App.Current.Dispatcher.Invoke(() => {
-                    SearchResultEntries.Clear();
-                    SearchTotalResultCount = 0;
+                    m_mainViewModel.ResultsViewModel.ClearSearchEntries();
                     SearchRuntime = 0;
                     SearchingIndicatorVisibility = Visibility.Visible;
                 });
@@ -306,12 +191,8 @@ namespace SeekerCore.ViewModels
 
                 App.Current.Dispatcher.Invoke(() => {
                     SearchingIndicatorVisibility = Visibility.Collapsed;
-                    if (null != m_searchAgent.Results.entries)
-                    {
-                        foreach (string entry in m_searchAgent.Results.entries)
-                            SearchResultEntries.Add(entry.Substring(entry.LastIndexOf("\\") + 1));
-                        SearchTotalResultCount = m_searchAgent.Results.count;
-                    }
+                    if (null != m_mainViewModel.MainSearchAgent.Results.entries)
+                        m_mainViewModel.ResultsViewModel.AddSearchEntries(m_mainViewModel.MainSearchAgent.Results.entries);
                 });
             }
 
@@ -320,19 +201,6 @@ namespace SeekerCore.ViewModels
                 ((RelayCommand)AddSearchDirectoryCommand).RaiseCanExecuteChanged();
                 ((RelayCommand)RemoveSearchDirectoryCommand).RaiseCanExecuteChanged();
             });
-        }
-
-        private void OnSelectedResultFileIndexChanged()
-        {
-            if (m_selectedFileIndex < 0 || m_selectedFileIndex > m_searchAgent.Results.count)
-                return;
-
-            FileInfo fileInfo = new FileInfo(m_searchAgent.Results.entries[m_selectedFileIndex]);
-            SelectedFilePath = fileInfo.FullName;
-            SelectedFileName = fileInfo.Name;
-            SelectedFileCreationTime = fileInfo.CreationTime.ToString("F");
-            SelectedFileLastAccessTime = fileInfo.LastAccessTime.ToString("F");
-            SelectedFileLastWriteTime = fileInfo.LastWriteTime.ToString("F");
         }
 
         private void ExecuteSearch()
@@ -346,7 +214,7 @@ namespace SeekerCore.ViewModels
                     rootDirectory = SearchDirectories[i],
                     isRecursive = true
                 };
-                m_searchAgent.RunFileSearch(m_searchCriteriaInfo, searchParameters);
+                m_mainViewModel.MainSearchAgent.RunFileSearch(m_searchCriteriaInfo, searchParameters);
             }
 
         }
@@ -355,7 +223,7 @@ namespace SeekerCore.ViewModels
         {
             if (null == m_languageParser)
                 return false;
-            if (m_searchAgent.State == SearchAgent.ActivityState.ACTIVE)
+            if (m_mainViewModel.MainSearchAgent.State == SearchAgent.ActivityState.ACTIVE)
                 return false;
 
             return SearchDirectories.Count > 0 && m_languageParser.IsPhraseValid(m_searchPhrase);
@@ -369,7 +237,7 @@ namespace SeekerCore.ViewModels
 
         private bool CanExecuteAddSearchDirectory()
         {
-            return m_searchAgent.State == SearchAgent.ActivityState.INACTIVE &&
+            return m_mainViewModel.MainSearchAgent.State == SearchAgent.ActivityState.INACTIVE &&
                 null != NewSearchDirectory &&
                 NewSearchDirectory != string.Empty &&
                 Directory.Exists(NewSearchDirectory);
@@ -383,7 +251,7 @@ namespace SeekerCore.ViewModels
 
         private bool CanExecuteRemoveSearchDirectory()
         {
-            return m_searchAgent.State == SearchAgent.ActivityState.INACTIVE &&
+            return m_mainViewModel.MainSearchAgent.State == SearchAgent.ActivityState.INACTIVE &&
                 SearchDirectories.Count > 0 &&
                 SearchDirectoryRemovalIndex != -1;
         }

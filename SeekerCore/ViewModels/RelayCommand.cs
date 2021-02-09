@@ -28,6 +28,9 @@ namespace SeekerCore.ViewModels
 
         public void RaiseCanExecuteChanged()
         {
+            if (null == this)
+                return;
+
             CanExecuteChanged(this, null);
         }
     }

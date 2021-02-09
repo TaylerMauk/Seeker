@@ -9,14 +9,18 @@ namespace SeekerCore.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        private SearchViewModel m_searchViewModel;
+        private MainViewModel m_mainViewModel;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            m_searchViewModel = new SearchViewModel();
-            DataContext = m_searchViewModel;
+            m_mainViewModel = new MainViewModel();
+
+            DataContext = m_mainViewModel;
+            gridSearchParams.DataContext = m_mainViewModel.SearchViewModel;
+            gridSearchResults.DataContext = m_mainViewModel.ResultsViewModel;
+            txtBlockResultsCount.DataContext = m_mainViewModel.ResultsViewModel;
         }
 
         private void OnWindowStateChanged(object sender, EventArgs e)

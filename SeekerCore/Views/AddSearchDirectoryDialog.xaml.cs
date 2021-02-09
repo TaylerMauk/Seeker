@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using SeekerCore.ViewModels;
 
 namespace SeekerCore.Views
 {
@@ -12,7 +13,7 @@ namespace SeekerCore.Views
             InitializeComponent();
 
             this.Owner = owner;
-            this.DataContext = Owner.DataContext;
+            this.DataContext = ((MainViewModel)Owner.DataContext).SearchViewModel;
 
             txtBoxSearchDirectory.Focus();
         }

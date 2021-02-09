@@ -112,7 +112,7 @@
             </Grid>
 
             <!-- Main content -->
-            <Grid Grid.Row="1" Background="{StaticResource TitlebarBackgoundBrush}">
+            <Grid x:Name="gridSearchParams" Grid.Row="1" Background="{StaticResource TitlebarBackgoundBrush}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -206,7 +206,7 @@
 
                             <TextBlock Text="Number of Results" FontWeight="Bold" />
                             <Separator />
-                            <TextBlock Text="{Binding SearchTotalResultCount, Mode=OneWay}" Margin="10 0" />
+                            <TextBlock x:Name="txtBlockResultsCount" Text="{Binding SearchTotalResultCount, Mode=OneWay}" Margin="10 0" />
                             <Separator Height="20" Background="Transparent" />
                         </StackPanel>
                     </StackPanel>
@@ -223,7 +223,7 @@
                 </Grid>
             </Grid>
 
-            <Grid Grid.Column="1" Grid.Row="1">
+            <Grid x:Name="gridSearchResults" Grid.Column="1" Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*" />
                     <RowDefinition Height="*" />
