@@ -229,14 +229,21 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <ListBox Grid.Row="0" Style="{StaticResource MainListBoxStyle}" ItemsSource="{Binding SearchResultEntries}" />
+                <ListBox Grid.Row="0" Style="{StaticResource MainListBoxStyle}" ItemsSource="{Binding SearchResultEntries}" SelectedIndex="{Binding SelectedFileIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <StackPanel Grid.Row="1"  Background="{StaticResource WindowTextBrushLight}">
                     <!-- <StackPanel.Resources>
                             <Style BasedOn="{StaticResource MainTextStyle}" TargetType="TextBlock" />
                         </StackPanel.Resources> -->
 
-                    <TextBlock Text="About the selected file" />
+                    <TextBlock Text="Full Path" />
+                    <TextBlock Text="{Binding SelectedFilePath}" TextWrapping="WrapWithOverflow" />
+                    <TextBlock Text="Creation Time" />
+                    <TextBlock Text="{Binding SelectedFileCreationTime}" />
+                    <TextBlock Text="Last Access Time" />
+                    <TextBlock Text="{Binding SelectedFileLastAccessTime}" />
+                    <TextBlock Text="Last Write Time" />
+                    <TextBlock Text="{Binding SelectedFileLastWriteTime}" />
                 </StackPanel>
             </Grid>
         </Grid>
