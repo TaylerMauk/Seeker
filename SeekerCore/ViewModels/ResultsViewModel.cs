@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Windows.Input;
 
 namespace SeekerCore.ViewModels
 {
@@ -137,6 +139,8 @@ namespace SeekerCore.ViewModels
         }
         private string m_selectedFileCreationTime;
 
+        public ICommand RevealInFileExplorerCommand { get; set; }
+
         private MainViewModel m_mainViewModel;
 
         public ResultsViewModel(MainViewModel mainViewModel)
@@ -144,6 +148,7 @@ namespace SeekerCore.ViewModels
             m_mainViewModel = mainViewModel;
 
             SearchResultEntries = new ObservableCollection<string>();
+            RevealInFileExplorerCommand = new RelayCommand(RevealInFileExplorer, CanExecuteRevealInFileExplorer);
 
             m_selectedFileIndex = -1;
         }
@@ -173,6 +178,21 @@ namespace SeekerCore.ViewModels
             SelectedFileCreationTime = fileInfo.CreationTime.ToString("F");
             SelectedFileLastAccessTime = fileInfo.LastAccessTime.ToString("F");
             SelectedFileLastWriteTime = fileInfo.LastWriteTime.ToString("F");
+
+            ((RelayCommand)RevealInFileExplorerCommand).RaiseCanExecuteChanged();
+        }
+
+        /// <summary>
+        /// Reveals the selected file in File Explorer
+        /// </summary>
+        private void RevealInFileExplorer()
+        {
+            Process.Start("explorer.exe", $"/select, \"{SelectedFilePath}\"");
+        }
+
+        private bool CanExecuteRevealInFileExplorer()
+        {
+            return SelectedFileIndex != -1;
         }
     }
 }

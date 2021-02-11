@@ -244,6 +244,7 @@
                     <TextBlock Text="{Binding SelectedFileLastAccessTime}" />
                     <TextBlock Text="Last Write Time" />
                     <TextBlock Text="{Binding SelectedFileLastWriteTime}" />
+                    <Button Style="{StaticResource MainButtonStyle}" Content="Reveal in File Explorer" Command="{Binding RevealInFileExplorerCommand}" />
                 </StackPanel>
             </Grid>
         </Grid>

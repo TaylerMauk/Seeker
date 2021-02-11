@@ -5,7 +5,11 @@ namespace SeekerCore.ViewModels
 {
     class RelayCommand : ICommand
     {
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
 
         private Action m_action;
         private Func<bool> m_canExecuteAction;
@@ -28,10 +32,7 @@ namespace SeekerCore.ViewModels
 
         public void RaiseCanExecuteChanged()
         {
-            if (null == this)
-                return;
-
-            CanExecuteChanged(this, null);
+            CommandManager.InvalidateRequerySuggested();
         }
     }
 }
