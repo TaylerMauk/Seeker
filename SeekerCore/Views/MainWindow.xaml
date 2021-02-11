@@ -54,6 +54,7 @@
                 </TextBlock>
             </Grid>
 
+            <!-- Window buttons -->
             <Grid Grid.Row="0" Grid.Column="1" Background="{StaticResource WindowTextBrushLight}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -212,21 +213,21 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <Grid Grid.Row="2">
+                <Grid Grid.Row="2" Height="30">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" Style="{StaticResource MainButtonStyle}" Content="Simple" Height="25" />
-                    <Button Grid.Column="1" Style="{StaticResource MainButtonStyle}" Content="Advanced" Height="25" />
+                    <Button Grid.Column="0" Style="{StaticResource MainButtonStyle}" Content="Simple" />
+                    <Button Grid.Column="1" Style="{StaticResource MainButtonStyle}" Content="Advanced" />
                 </Grid>
             </Grid>
 
             <Grid x:Name="gridSearchResults" Grid.Column="1" Grid.Row="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="2*" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <ListBox Grid.Row="0" Style="{StaticResource MainListBoxStyle}" ItemsSource="{Binding SearchResultEntries}" SelectedIndex="{Binding SelectedFileIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -236,15 +237,36 @@
                             <Style BasedOn="{StaticResource MainTextStyle}" TargetType="TextBlock" />
                         </StackPanel.Resources> -->
 
-                    <TextBlock Text="Full Path" />
-                    <TextBlock Text="{Binding SelectedFilePath}" TextWrapping="WrapWithOverflow" />
-                    <TextBlock Text="Creation Time" />
-                    <TextBlock Text="{Binding SelectedFileCreationTime}" />
-                    <TextBlock Text="Last Access Time" />
-                    <TextBlock Text="{Binding SelectedFileLastAccessTime}" />
-                    <TextBlock Text="Last Write Time" />
-                    <TextBlock Text="{Binding SelectedFileLastWriteTime}" />
-                    <Button Style="{StaticResource MainButtonStyle}" Content="Reveal in File Explorer" Command="{Binding RevealInFileExplorerCommand}" />
+                    <StackPanel Margin="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="Full Path" FontWeight="Bold" VerticalAlignment="Bottom" />
+                            <Button Grid.Column="2" Style="{StaticResource MainButtonStyle}" HorizontalAlignment="Right" Width="140" Content="Reveal in File Explorer" Command="{Binding RevealInFileExplorerCommand}" />
+                        </Grid>
+                        <Separator />
+                        <TextBlock Text="{Binding SelectedFilePath}" TextWrapping="WrapWithOverflow" />
+                        <Separator Height="20" Background="Transparent" />
+
+                        <TextBlock Text="Creation Time" FontWeight="Bold" />
+                        <Separator />
+                        <TextBlock Text="{Binding SelectedFileCreationTime}" />
+                        <Separator Height="20" Background="Transparent" />
+
+                        <TextBlock Text="Last Access Time" FontWeight="Bold" />
+                        <Separator />
+                        <TextBlock Text="{Binding SelectedFileLastAccessTime}" />
+                        <Separator Height="20" Background="Transparent" />
+
+                        <TextBlock Text="Last Write Time" FontWeight="Bold" />
+                        <Separator />
+                        <TextBlock Text="{Binding SelectedFileLastWriteTime}" />
+                        <Separator Height="20" Background="Transparent" />
+                    </StackPanel>
                 </StackPanel>
             </Grid>
         </Grid>
