@@ -1,26 +1,55 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using SeekerCore.ViewModels;
+using SeekerCore.Views.Pages;
 
-namespace SeekerCore.Views
+namespace SeekerCore.Views.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        public Page SelectedParameterPage
+        {
+            get
+            {
+                return m_selectedParameterPage;
+            }
+            set
+            {
+                m_selectedParameterPage = value;
+                frameParameters.Navigate(m_selectedParameterPage);
+            }
+        }
+        private Page m_selectedParameterPage;
+
         private MainViewModel m_mainViewModel;
+        private AdvancedParametersPage m_advancedParamsPage;
+        private SimpleParametersPage m_simpleParamsPage;
 
         public MainWindow()
         {
             InitializeComponent();
 
+            m_advancedParamsPage = new AdvancedParametersPage();
+            m_simpleParamsPage = new SimpleParametersPage();
             m_mainViewModel = new MainViewModel();
+            m_selectedParameterPage = m_mainViewModel.SearchViewModel.IsUsingSimpleParameters ?
+                m_simpleParamsPage :
+                m_advancedParamsPage;
+
 
             DataContext = m_mainViewModel;
             gridSearchParams.DataContext = m_mainViewModel.SearchViewModel;
             gridSearchResults.DataContext = m_mainViewModel.ResultsViewModel;
             txtBlockResultsCount.DataContext = m_mainViewModel.ResultsViewModel;
+            frameParameters.DataContext = this;
+
+            m_advancedParamsPage.Owner = this;
+            m_advancedParamsPage.DataContext = gridSearchParams.DataContext;
+            m_simpleParamsPage.DataContext = gridSearchParams.DataContext;
         }
 
         private void OnWindowStateChanged(object sender, EventArgs e)
@@ -60,9 +89,14 @@ namespace SeekerCore.Views
             }
         }
 
-        private void OnAddSearchDirectoryButtonClick(object sender, RoutedEventArgs e)
+        private void OnBtnUseSimpleParamsClick(object sender, RoutedEventArgs e)
         {
-            new AddSearchDirectoryDialog(this).ShowDialog();
+            SelectedParameterPage = m_simpleParamsPage;
+        }
+
+        private void OnBtnUseAdvancedParamsClick(object sender, RoutedEventArgs e)
+        {
+            SelectedParameterPage = m_advancedParamsPage;
         }
     }
 }

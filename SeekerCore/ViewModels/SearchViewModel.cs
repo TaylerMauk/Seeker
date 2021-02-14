@@ -138,11 +138,31 @@ namespace SeekerCore.ViewModels
         }
         private int m_searchDirectoryRemovalIndex;
 
+        public bool IsUsingSimpleParameters
+        {
+            get
+            {
+                return m_isUsingSimpleParameters;
+            }
+            set
+            {
+                m_isUsingSimpleParameters = value;
+                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(IsUsingSimpleParameters)));
+                ((RelayCommand)UseSimpleParametersCommand).RaiseCanExecuteChanged();
+                ((RelayCommand)UseAdvancedParametersCommand).RaiseCanExecuteChanged();
+            }
+        }
+        private bool m_isUsingSimpleParameters;
+
         public ICommand ExecuteSearchCommand { get; set; }
 
         public ICommand AddSearchDirectoryCommand { get; set; }
 
         public ICommand RemoveSearchDirectoryCommand { get; set; }
+
+        public ICommand UseSimpleParametersCommand { get; set; }
+
+        public ICommand UseAdvancedParametersCommand { get; set; }
 
         private LanguageParser m_languageParser;
         private CriteriaInfo[] m_searchCriteriaInfo;
@@ -156,12 +176,15 @@ namespace SeekerCore.ViewModels
             ExecuteSearchCommand = new RelayCommand(ExecuteSearch, CanExecuteSearch);
             AddSearchDirectoryCommand = new RelayCommand(AddSearchDirectory, CanExecuteAddSearchDirectory);
             RemoveSearchDirectoryCommand = new RelayCommand(RemoveSearchDirectory, CanExecuteRemoveSearchDirectory);
+            UseSimpleParametersCommand = new RelayCommand(UseSimpleParameters, CanExecuteUseSimpleParameters);
+            UseAdvancedParametersCommand = new RelayCommand(UseAdvancedParameters, CanExecuteUseAdvancedParameters);
 
             SearchDirectories = new ObservableCollection<string>();
             SearchingIndicatorVisibility = Visibility.Collapsed;
 
             m_languageParser = new LanguageParser();
             m_searchDirectoryRemovalIndex = -1;
+            m_isUsingSimpleParameters = true;
 
             m_mainViewModel.MainSearchAgent.StateChanged += OnSearchAgentStateChanged;
         }
@@ -254,6 +277,26 @@ namespace SeekerCore.ViewModels
             return m_mainViewModel.MainSearchAgent.State == SearchAgent.ActivityState.INACTIVE &&
                 SearchDirectories.Count > 0 &&
                 SearchDirectoryRemovalIndex != -1;
+        }
+
+        private void UseSimpleParameters()
+        {
+            IsUsingSimpleParameters = true;
+        }
+
+        private bool CanExecuteUseSimpleParameters()
+        {
+            return !m_isUsingSimpleParameters;
+        }
+
+        private void UseAdvancedParameters()
+        {
+            IsUsingSimpleParameters = false;
+        }
+
+        private bool CanExecuteUseAdvancedParameters()
+        {
+            return m_isUsingSimpleParameters;
         }
     }
 }

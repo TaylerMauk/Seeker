@@ -1,4 +1,6 @@
 ﻿using SeekerCore.Model;
+using System.ComponentModel;
+using System.Windows.Controls;
 
 namespace SeekerCore.ViewModels
 {

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using SeekerCore.ViewModels;
 
-namespace SeekerCore.Views
+namespace SeekerCore.Views.Windows
 {
     /// <summary>
     /// Interaction logic for AddSearchDirectoryDialog.xaml
