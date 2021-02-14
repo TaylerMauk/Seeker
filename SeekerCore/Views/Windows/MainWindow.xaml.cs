@@ -25,6 +25,16 @@ namespace SeekerCore.Views.Windows
         }
         private Page m_selectedParameterPage;
 
+        private const string SYNTAX_GUIDE_TEXT =
+            "Separate requirements using a comma\n" +
+            "    my, file\n" +
+            "Create alternate requirements using a pipe\n" +
+            "    my | flie\n" +
+            "Exclude words by using a hyphen\n" +
+            "    -my\n\n" +
+            "Still lost?\n" +
+            "    Don't worry! Just start typing and check out the translation.";
+
         private MainViewModel m_mainViewModel;
         private AdvancedParametersPage m_advancedParamsPage;
         private SimpleParametersPage m_simpleParamsPage;
@@ -32,6 +42,8 @@ namespace SeekerCore.Views.Windows
         public MainWindow()
         {
             InitializeComponent();
+
+            txtBlockSyntaxGuide.Text = SYNTAX_GUIDE_TEXT;
 
             m_advancedParamsPage = new AdvancedParametersPage();
             m_simpleParamsPage = new SimpleParametersPage();

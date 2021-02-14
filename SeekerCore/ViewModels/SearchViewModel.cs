@@ -30,6 +30,23 @@ namespace SeekerCore.ViewModels
         private double m_searchRuntime;
 
         /// <summary>
+        /// Header for <see cref="FriendlyTranslation"/>
+        /// </summary>
+        public string FriendlyTranslationHeader
+        {
+            get
+            {
+                return m_friendlyTranslationHeader;
+            }
+            set
+            {
+                m_friendlyTranslationHeader = value;
+                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(FriendlyTranslationHeader)));
+            }
+        }
+        private string m_friendlyTranslationHeader;
+
+        /// <summary>
         /// User-friendly translation of <see cref="SearchPhrase"/>
         /// </summary>
         public string FriendlyTranslation
@@ -61,16 +78,19 @@ namespace SeekerCore.ViewModels
 
                 if (string.IsNullOrEmpty(m_searchPhrase))
                 {
+                    FriendlyTranslationHeader = "No search phrase has been entered";
                     FriendlyTranslation = string.Empty;
                 }
                 else if (m_languageParser.IsPhraseValid(m_searchPhrase))
                 {
+                    FriendlyTranslationHeader = "Find files whose names...";
                     m_searchCriteriaInfo = m_languageParser.Parse(m_searchPhrase);
                     FriendlyTranslation = m_languageParser.GetFriendlyTranslation(m_searchCriteriaInfo);
                 }
                 else
                 {
-                    FriendlyTranslation = "INVALID";
+                    FriendlyTranslationHeader = "An invalid search phrase has been entered";
+                    FriendlyTranslation = string.Empty;
                 }
 
                 OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(SearchPhrase)));
@@ -154,6 +174,77 @@ namespace SeekerCore.ViewModels
         }
         private bool m_isUsingSimpleParameters;
 
+        /// <summary>
+        /// Specifies that the search should only include the user profile folder.
+        /// Only used when <see cref="IsUsingSimpleParameters"/> is true.
+        /// </summary>
+        public bool IsSearchingUserData
+        {
+            get
+            {
+                return m_isSearchingUserData;
+            }
+            set
+            {
+                m_isSearchingUserData = value;
+                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(IsSearchingUserData)));
+            }
+        }
+        private bool m_isSearchingUserData;
+
+        /// <summary>
+        /// Specifies that the search should only include the Window's drive.
+        /// Only used when <see cref="IsUsingSimpleParameters"/> is true.
+        /// </summary>
+        public bool IsSearchingThisPc
+        {
+            get
+            {
+                return m_isSearchingThisPc;
+            }
+            set
+            {
+                m_isSearchingThisPc = value;
+                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(IsSearchingThisPc)));
+            }
+        }
+        private bool m_isSearchingThisPc;
+
+        /// <summary>
+        /// Specifies that the search should include any reachable drives.
+        /// Only used when <see cref="IsUsingSimpleParameters"/> is true.
+        /// </summary>
+        public bool IsSearchingEverywhere
+        {
+            get
+            {
+                return m_isSearchingEverywhere;
+            }
+            set
+            {
+                m_isSearchingEverywhere = value;
+                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(IsSearchingEverywhere)));
+            }
+        }
+        private bool m_isSearchingEverywhere;
+
+        /// <summary>
+        /// Username of user running the application.
+        /// </summary>
+        public string CurrentUsername
+        {
+            get
+            {
+                return m_currentUsername;
+            }
+            set
+            {
+                m_currentUsername = value;
+                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(CurrentUsername)));
+            }
+        }
+        private string m_currentUsername;
+
         public ICommand ExecuteSearchCommand { get; set; }
 
         public ICommand AddSearchDirectoryCommand { get; set; }
@@ -179,8 +270,11 @@ namespace SeekerCore.ViewModels
             UseSimpleParametersCommand = new RelayCommand(UseSimpleParameters, CanExecuteUseSimpleParameters);
             UseAdvancedParametersCommand = new RelayCommand(UseAdvancedParameters, CanExecuteUseAdvancedParameters);
 
+            SearchPhrase = String.Empty;
             SearchDirectories = new ObservableCollection<string>();
             SearchingIndicatorVisibility = Visibility.Collapsed;
+            IsSearchingUserData = true;
+            CurrentUsername = Environment.UserName;
 
             m_languageParser = new LanguageParser();
             m_searchDirectoryRemovalIndex = -1;
@@ -228,6 +322,40 @@ namespace SeekerCore.ViewModels
 
         private void ExecuteSearch()
         {
+            if (m_isUsingSimpleParameters)
+                ExecuteSimpleSearch();
+            else
+                ExecuteAdvancedSearch();
+        }
+
+        private void ExecuteSimpleSearch()
+        {
+            ObservableCollection<string> tmpSave = SearchDirectories;
+            SearchDirectories.Clear();
+
+            if (IsSearchingUserData)
+            {
+                SearchDirectories.Add(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
+            }
+            else if (IsSearchingThisPc)
+            {
+                SearchDirectories.Add(Path.GetPathRoot(Environment.SystemDirectory));
+            }
+            else
+            {
+                foreach (string drive in Environment.GetLogicalDrives())
+                    SearchDirectories.Add(drive);
+            }
+
+            ExecuteAdvancedSearch();
+
+            // Restore SearchDirectories
+            SearchDirectories = tmpSave;
+        }
+
+        private void ExecuteAdvancedSearch()
+        {
+            Debug.WriteLine("EXECUTE ADVANCED SEARCH");
             SearchParameters searchParameters;
             for (int i = 0; i < SearchDirectories.Count; ++i)
             {
@@ -249,7 +377,10 @@ namespace SeekerCore.ViewModels
             if (m_mainViewModel.MainSearchAgent.State == SearchAgent.ActivityState.ACTIVE)
                 return false;
 
-            return SearchDirectories.Count > 0 && m_languageParser.IsPhraseValid(m_searchPhrase);
+            if (m_isUsingSimpleParameters)
+                return m_languageParser.IsPhraseValid(m_searchPhrase);
+            else
+                return SearchDirectories.Count > 0 && m_languageParser.IsPhraseValid(m_searchPhrase);
         }
 
         private void AddSearchDirectory()

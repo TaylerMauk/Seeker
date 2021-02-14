@@ -13,36 +13,18 @@
             <Style BasedOn="{StaticResource MainTextStyle}" TargetType="TextBlock" />
         </StackPanel.Resources>
 
-        <TextBlock Text="Simple PARAMS" FontWeight="Bold" />
+        <TextBlock Text="Where to Search" FontWeight="Bold" />
         <Separator />
-        <ListBox ItemsSource="{Binding SearchDirectories, Mode=OneWay}" Style="{StaticResource MainListBoxStyle}" Margin="10px 0" Height="Auto" SelectedIndex="{Binding SearchDirectoryRemovalIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        <Grid Margin="10,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="1" Style="{StaticResource MainButtonStyle}">
-                <Path
-                    Height="12"
-                    Width="12"
-                    Margin="5"
-			        Data="M 6,0 6,12 M 0,6 12,6"
-			        Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
-			        StrokeThickness="1"
-                    RenderOptions.EdgeMode="Aliased" />
-            </Button>
-            <Button Grid.Column="2" Style="{StaticResource MainButtonStyle}" Command="{Binding RemoveSearchDirectoryCommand}">
-                <Path
-                    Height="12"
-                    Width="12"
-                    Margin="5"
-			        Data="M 0,6 12,6"
-			        Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
-			        StrokeThickness="1"
-                    RenderOptions.EdgeMode="Aliased" />
-            </Button>
-        </Grid>
+        <StackPanel Margin="10 5">
+            <RadioButton GroupName="Options" IsChecked="{Binding IsSearchingUserData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock Text="{Binding CurrentUsername, Mode=OneWay, StringFormat='\{0\} User Data'}" />
+            </RadioButton>
+            <RadioButton GroupName="Options" IsChecked="{Binding IsSearchingThisPc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock Text="This PC" />
+            </RadioButton>
+            <RadioButton GroupName="Options" IsChecked="{Binding IsSearchingEverywhere, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock Text="Everywhere (This will take some time)" />
+            </RadioButton>
+        </StackPanel>
     </StackPanel>
 </Page>

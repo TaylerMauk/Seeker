@@ -149,13 +149,13 @@
 
                             <TextBlock Text="Search Translation" FontWeight="Bold" />
                             <Separator />
-                            <TextBlock Text="Find files whose names..." Margin="10 0" />
+                            <TextBlock Text="{Binding FriendlyTranslationHeader}" Margin="10 0" />
                             <TextBlock Text="{Binding FriendlyTranslation}" Margin="15 0" TextWrapping="WrapWithOverflow" />
                             <Separator Height="20" Background="Transparent" />
 
                             <TextBlock Text="Syntax Guide" FontWeight="Bold" />
                             <Separator />
-                            <TextBlock Text=", = AND | = OR - = NOT and stuff" Margin="10 0" />
+                            <TextBlock x:Name="txtBlockSyntaxGuide" Margin="10 0" TextWrapping="WrapWithOverflow" />
                             <Separator Height="20" Background="Transparent" />
                         </StackPanel>
 
@@ -184,7 +184,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Button x:Name="btnUseSimpleParams" Grid.Column="0" Style="{StaticResource MainButtonStyle}" Command="{Binding UseSimpleParametersCommand}" Click="OnBtnUseSimpleParamsClick" Content="Simple" />
-                    <Button x:Name="btnUseAdvancedParams" Style="{StaticResource MainButtonStyle}" Command="{Binding UseAdvancedParametersCommand}" Click="OnBtnUseAdvancedParamsClick" Content="Advanced" Grid.ColumnSpan="2" Height="30" Margin="137,0,0,0" VerticalAlignment="Bottom" />
+                    <Button x:Name="btnUseAdvancedParams" Grid.Column="1" Style="{StaticResource MainButtonStyle}" Command="{Binding UseAdvancedParametersCommand}" Click="OnBtnUseAdvancedParamsClick" Content="Advanced" />
                 </Grid>
             </Grid>
 
