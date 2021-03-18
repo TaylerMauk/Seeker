@@ -228,23 +228,6 @@ namespace SeekerCore.ViewModels
         }
         private bool m_isSearchingEverywhere;
 
-        /// <summary>
-        /// Username of user running the application.
-        /// </summary>
-        public string CurrentUsername
-        {
-            get
-            {
-                return m_currentUsername;
-            }
-            set
-            {
-                m_currentUsername = value;
-                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(CurrentUsername)));
-            }
-        }
-        private string m_currentUsername;
-
         public ICommand ExecuteSearchCommand { get; set; }
 
         public ICommand AddSearchDirectoryCommand { get; set; }
@@ -274,7 +257,6 @@ namespace SeekerCore.ViewModels
             SearchDirectories = new ObservableCollection<string>();
             SearchingIndicatorVisibility = Visibility.Collapsed;
             IsSearchingUserData = true;
-            CurrentUsername = Environment.UserName;
 
             m_languageParser = new LanguageParser();
             m_searchDirectoryRemovalIndex = -1;

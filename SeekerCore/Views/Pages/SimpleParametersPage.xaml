@@ -16,15 +16,9 @@
         <TextBlock Text="Where to Search" FontWeight="Bold" />
         <Separator />
         <StackPanel Margin="10 5">
-            <RadioButton GroupName="Options" IsChecked="{Binding IsSearchingUserData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <TextBlock Text="{Binding CurrentUsername, Mode=OneWay, StringFormat='\{0\} User Data'}" />
-            </RadioButton>
-            <RadioButton GroupName="Options" IsChecked="{Binding IsSearchingThisPc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <TextBlock Text="This PC" />
-            </RadioButton>
-            <RadioButton GroupName="Options" IsChecked="{Binding IsSearchingEverywhere, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <TextBlock Text="Everywhere (This will take some time)" />
-            </RadioButton>
+            <RadioButton GroupName="Options" Content="My User Data" IsChecked="{Binding IsSearchingUserData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <RadioButton GroupName="Options" Content="This PC" IsChecked="{Binding IsSearchingThisPc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <RadioButton GroupName="Options" Content="Everywhere (This will take some time)" IsChecked="{Binding IsSearchingEverywhere, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
     </StackPanel>
 </Page>

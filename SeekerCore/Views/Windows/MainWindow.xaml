@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeekerCore.Views.Windows"
         mc:Ignorable="d"
-        Background="{StaticResource WindowMainBackgoundBrush}"
         ResizeMode="CanResize"
         StateChanged="OnWindowStateChanged"
         Title="Seeker" Height="650" Width="825">
@@ -25,7 +24,7 @@
             </Grid.RowDefinitions>
 
             <!-- Custom titlebar -->
-            <Grid Grid.Column="0" Grid.Row="0" Background="{StaticResource TitlebarBackgoundBrush}">
+            <Grid Grid.Column="0" Grid.Row="0" Background="{StaticResource BackgroundLightBrush}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -36,26 +35,16 @@
 
                 <!-- Window name -->
                 <TextBlock
-		                Grid.Column="1"
-		                Margin="4 0 0 0"
-		                VerticalAlignment="Center"
-		                FontSize="14"
-		                Text="{Binding Path=Title, RelativeSource={RelativeSource FindAncestor,AncestorType=Window}}">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Foreground" Value="{DynamicResource TitlebarTextBrush}" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
-                                    <Setter Property="Foreground" Value="{DynamicResource WindowTextBrushDark}" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+		            Grid.Column="1"
+		            Margin="4 0 0 0"
+		            VerticalAlignment="Center"
+		            FontSize="14"
+		            Text="{Binding Path=Title, RelativeSource={RelativeSource FindAncestor,AncestorType=Window}}"
+                    Style="{DynamicResource TitlebarTextBlockStyle}" />
             </Grid>
 
             <!-- Window buttons -->
-            <Grid Grid.Row="0" Grid.Column="1" Background="{StaticResource WindowTextBrushLight}">
+            <Grid Grid.Row="0" Grid.Column="1" Background="{StaticResource BackgroundDarkBrush}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -66,7 +55,7 @@
 		            Grid.Column="1"
 		            Click="OnMinimizeButtonClick"
 		            RenderOptions.EdgeMode="Aliased"
-		            Style="{StaticResource TitleBarButtonStyle}">
+		            Style="{StaticResource TitlebarButtonStyle}">
                     <Path
 			            Width="46"
 			            Height="32"
@@ -78,7 +67,7 @@
 		            Name="maximizeButton"
 		            Grid.Column="2"
 		            Click="OnMaximizeRestoreButtonClick"
-		            Style="{StaticResource TitleBarButtonStyle}">
+		            Style="{StaticResource TitlebarButtonStyle}">
                     <Path
 			            Width="46"
 			            Height="32"
@@ -90,7 +79,7 @@
 		            Name="restoreButton"
 		            Grid.Column="2"
 		            Click="OnMaximizeRestoreButtonClick"
-		            Style="{StaticResource TitleBarButtonStyle}"
+		            Style="{StaticResource TitlebarButtonStyle}"
                     Visibility="Collapsed">
                     <Path
 			            Width="46"
@@ -102,7 +91,7 @@
                 <Button
 		            Grid.Column="3"
 		            Click="OnCloseButtonClick"
-		            Style="{StaticResource TitleBarCloseButtonStyle}">
+		            Style="{StaticResource TitlebarCloseButtonStyle}">
                     <Path
 			            Width="46"
 			            Height="32"
@@ -113,7 +102,7 @@
             </Grid>
 
             <!-- Main content -->
-            <Grid x:Name="gridSearchParams" Grid.Row="1" Background="{StaticResource TitlebarBackgoundBrush}">
+            <Grid x:Name="gridSearchParams" Grid.Row="1" Background="{StaticResource BackgroundLightBrush}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -183,8 +172,8 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="btnUseSimpleParams" Grid.Column="0" Style="{StaticResource MainButtonStyle}" Command="{Binding UseSimpleParametersCommand}" Click="OnBtnUseSimpleParamsClick" Content="Simple" />
-                    <Button x:Name="btnUseAdvancedParams" Grid.Column="1" Style="{StaticResource MainButtonStyle}" Command="{Binding UseAdvancedParametersCommand}" Click="OnBtnUseAdvancedParamsClick" Content="Advanced" />
+                    <Button x:Name="btnUseSimpleParams" Grid.Column="0" Style="{StaticResource TabSelectorButtonStyle}" Command="{Binding UseSimpleParametersCommand}" Click="OnBtnUseSimpleParamsClick" Content="Simple" />
+                    <Button x:Name="btnUseAdvancedParams" Grid.Column="1" Style="{StaticResource TabSelectorButtonStyle}" Command="{Binding UseAdvancedParametersCommand}" Click="OnBtnUseAdvancedParamsClick" Content="Advanced" />
                 </Grid>
             </Grid>
 
@@ -196,10 +185,10 @@
 
                 <ListBox Grid.Row="0" Style="{StaticResource MainListBoxStyle}" ItemsSource="{Binding SearchResultEntries}" SelectedIndex="{Binding SelectedFileIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                <StackPanel Grid.Row="1"  Background="{StaticResource WindowTextBrushLight}">
-                    <!-- <StackPanel.Resources>
-                            <Style BasedOn="{StaticResource MainTextStyle}" TargetType="TextBlock" />
-                        </StackPanel.Resources> -->
+                <StackPanel Grid.Row="1"  Background="{StaticResource BackgroundDarkBrush}">
+                    <StackPanel.Resources>
+                        <Style BasedOn="{StaticResource MainTextStyle}" TargetType="TextBlock" />
+                    </StackPanel.Resources>
 
                     <StackPanel Margin="10">
                         <Grid>

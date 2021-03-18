@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="WindowBorderBrush" Color="#FF323235" />
+
+    <SolidColorBrush x:Key="BackgroundDarkBrush" Color="#FF1E1E1E" />
+    <SolidColorBrush x:Key="BackgroundLightBrush" Color="#FF323235" />
+
+    <SolidColorBrush x:Key="TitlebarTextDarkBrush" Color="#FF1E1E1E" />
+    <SolidColorBrush x:Key="TitlebarTextLightBrush" Color="#FFD1D1D1" />
+    <SolidColorBrush x:Key="TitlebarMouseOverCloseButtonBackgroundBrush" Color="#FFCD1E1E" />
+    <SolidColorBrush x:Key="TitlebarPressedCloseButtonBackgroundBrush" Color="DarkRed" />
+
+    <SolidColorBrush x:Key="TextBrush" Color="#FF2C2C2C" />
+    <SolidColorBrush x:Key="TextDarkBrush" Color="Black" />
+    <SolidColorBrush x:Key="TextLightBrush" Color="#FFDADADA" />
+
+    <SolidColorBrush x:Key="MouseOverOverlayBackgroundBrush" Color="#FF5F5F6F" />
+    <SolidColorBrush x:Key="PressedOverlayBackgroundBrush" Color="#FF3E3E3E" />
+
+</ResourceDictionary>

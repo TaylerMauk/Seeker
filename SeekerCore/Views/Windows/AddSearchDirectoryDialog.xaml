@@ -15,7 +15,7 @@
             <DropShadowEffect BlurRadius="10" ShadowDepth="1" Direction="-90" />
         </Border.Effect>
 
-        <Grid Background="{StaticResource TitlebarTextBrush}">
+        <Grid Background="{StaticResource BackgroundLightBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -32,11 +32,11 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Grid.Row="0" Text="Add a search directory" Margin="5,0,0,0" />
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Add a search directory" Margin="5,0,0,0" Style="{DynamicResource TitlebarTextBlockStyle}" />
                 <Button
 		                Grid.Column="1"
                         Grid.Row="0"
-		                Style="{StaticResource TitleBarCloseButtonStyle}"
+		                Style="{StaticResource TitlebarCloseButtonStyle}"
                         Click="OnCancelClick">
                     <Path
 			            Width="46"
