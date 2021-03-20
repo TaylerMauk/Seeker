@@ -10,99 +10,8 @@
                 <ResourceDictionary Source="Styles/Colors.xaml" />
                 <ResourceDictionary Source="Styles/Text.xaml" />
                 <ResourceDictionary Source="Styles/Buttons.xaml" />
+                <ResourceDictionary Source="Styles/ScrollBars.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <Style x:Key="MainTextBoxStyle" TargetType="{x:Type TextBox}">
-                <Setter Property="Foreground" Value="{DynamicResource TextDarkBrush}" />
-                <Setter Property="CaretBrush" Value="{DynamicResource TextDarkBrush}" />
-                <Setter Property="IsTabStop" Value="True" />
-                <Setter Property="Padding" Value="7px"/>
-                <Setter Property="AllowDrop" Value="true"/>
-                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type TextBox}">
-                            <Border x:Name="border" BorderBrush="{DynamicResource TitlebarBackgoundBrush}" Background="{DynamicResource TextLightBrush}">
-                                <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="border" Property="BorderBrush" Value="#FF51ABB4" />
-                                    <Setter TargetName="border" Property="BorderThickness" Value="2" />
-                                    <Setter Property="Padding" Value="5" />
-                                </Trigger>
-                                <Trigger Property="IsFocused" Value="True">
-                                    <Setter TargetName="border" Property="BorderBrush" Value="#FF51ABB4" />
-                                    <Setter TargetName="border" Property="BorderThickness" Value="2" />
-                                    <Setter Property="Padding" Value="5" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <Style x:Key="SearchEntryBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource MainTextBoxStyle}">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type TextBox}">
-                            <Border x:Name="border" BorderBrush="{DynamicResource TitlebarBackgoundBrush}" BorderThickness="0, 0, 2, 0" Background="{DynamicResource TextLightBrush}">
-                                <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="border" Property="BorderBrush" Value="#FF51ABB4" />
-                                    <Setter TargetName="border" Property="BorderThickness" Value="2" />
-                                    <Setter Property="Padding" Value="5" />
-                                </Trigger>
-                                <Trigger Property="IsFocused" Value="True">
-                                    <Setter TargetName="border" Property="BorderBrush" Value="#FF51ABB4" />
-                                    <Setter TargetName="border" Property="BorderThickness" Value="2" />
-                                    <Setter Property="Padding" Value="5" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <Style x:Key="AddSearchDirectoryBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource MainTextBoxStyle}">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type TextBox}">
-                            <Border x:Name="border" BorderBrush="{DynamicResource TitlebarBackgoundBrush}" BorderThickness="0, 0, 0, 2" Background="{DynamicResource TextLightBrush}">
-                                <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="border" Property="BorderBrush" Value="#FF51ABB4" />
-                                    <Setter TargetName="border" Property="BorderThickness" Value="2" />
-                                    <Setter Property="Padding" Value="5" />
-                                </Trigger>
-                                <Trigger Property="IsFocused" Value="True">
-                                    <Setter TargetName="border" Property="BorderBrush" Value="#FF51ABB4" />
-                                    <Setter TargetName="border" Property="BorderThickness" Value="2" />
-                                    <Setter Property="Padding" Value="5" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <Style x:Key="MainListBoxStyle" TargetType="{x:Type ListBox}">
-                <Setter Property="Foreground" Value="{DynamicResource TextLightBrush}" />
-                <Setter Property="Background" Value="{DynamicResource BackgroundDarkBrush}" />
-                <Setter Property="IsTabStop" Value="True" />
-                <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLightBrush}" />
-                <Setter Property="BorderThickness" Value="0, 0, 0, 1" />
-                <Setter Property="Padding" Value="0" />
-            </Style>
-
-            <Style x:Key="MainTextStyle" TargetType="TextBlock">
-                <Setter Property="Foreground" Value="{DynamicResource TextLightBrush}" />
-                <Setter Property="Padding" Value="0" />
-            </Style>
 
             <Style x:Key="WindowMainPanelStyle" TargetType="{x:Type Border}">
                 <Setter Property="BorderBrush" Value="{DynamicResource WindowBorderBrush}" />
@@ -114,6 +23,19 @@
                         <Setter Property="Margin" Value="5" />
                     </DataTrigger>
                 </Style.Triggers>
+            </Style>
+
+            <Style x:Key="MainListBoxStyle" TargetType="{x:Type ListBox}">
+                <Style.Resources>
+                    <!-- Changes white square in the corner where scrollbars meet -->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+                </Style.Resources>
+                <Setter Property="Foreground" Value="{DynamicResource TextLightBrush}" />
+                <Setter Property="Background" Value="{DynamicResource BackgroundDarkBrush}" />
+                <Setter Property="IsTabStop" Value="True" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLightBrush}" />
+                <Setter Property="BorderThickness" Value="0 0 0 1" />
+                <Setter Property="Padding" Value="0" />
             </Style>
 
             <Thickness x:Key="ShadowRadius">10</Thickness>

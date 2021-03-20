@@ -9,7 +9,7 @@
         StateChanged="OnWindowStateChanged"
         Title="Seeker" Height="650" Width="825">
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="32" ResizeBorderThickness="{StaticResource ShadowRadius}" />
+        <WindowChrome CaptionHeight="28" ResizeBorderThickness="{StaticResource ShadowRadius}" />
     </WindowChrome.WindowChrome>
 
     <Border Style="{StaticResource WindowMainPanelStyle}">
@@ -102,7 +102,7 @@
             </Grid>
 
             <!-- Main content -->
-            <Grid x:Name="gridSearchParams" Grid.Row="1" Background="{StaticResource BackgroundLightBrush}">
+            <Grid x:Name="gridSearchParams" Grid.Row="1" Grid.Column="0" Background="{StaticResource BackgroundLightBrush}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />

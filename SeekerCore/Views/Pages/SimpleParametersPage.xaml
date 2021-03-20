@@ -10,7 +10,8 @@
 
     <StackPanel Margin="10">
         <StackPanel.Resources>
-            <Style BasedOn="{StaticResource MainTextStyle}" TargetType="TextBlock" />
+            <Style BasedOn="{StaticResource MainTextStyle}" TargetType="{x:Type TextBlock}" />
+            <Style BasedOn="{StaticResource MainRadioButtonStyle}" TargetType="{x:Type RadioButton}" />
         </StackPanel.Resources>
 
         <TextBlock Text="Where to Search" FontWeight="Bold" />
