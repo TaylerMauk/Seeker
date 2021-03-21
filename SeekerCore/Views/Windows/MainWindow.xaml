@@ -9,7 +9,7 @@
         StateChanged="OnWindowStateChanged"
         Title="Seeker" Height="650" Width="825">
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="28" ResizeBorderThickness="{StaticResource ShadowRadius}" />
+        <WindowChrome CaptionHeight="26" ResizeBorderThickness="{StaticResource ShadowRadius}" />
     </WindowChrome.WindowChrome>
 
     <Border Style="{StaticResource WindowMainPanelStyle}">
@@ -51,6 +51,9 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+
+                <Rectangle x:Name="loadingIndicator" Grid.Column="0" Style="{DynamicResource LoadingAnimationStyle}" Visibility="{Binding SearchingIndicatorVisibility, Mode=OneWay}" />
+                
                 <Button
 		            Grid.Column="1"
 		            Click="OnMinimizeButtonClick"
@@ -104,22 +107,13 @@
             <!-- Main content -->
             <Grid x:Name="gridSearchParams" Grid.Row="1" Grid.Column="0" Background="{StaticResource BackgroundLightBrush}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0" Height="50px" Visibility="{Binding SearchingIndicatorVisibility, Mode=OneWay}">
-                    <StackPanel.Resources>
-                        <Style BasedOn="{StaticResource MainTextStyle}" TargetType="TextBlock" />
-                    </StackPanel.Resources>
-
-                    <TextBlock Text="Loading/searching animation here" />
-                </StackPanel>
-
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <Grid Height="30" Margin="10">
+                        <Grid Height="30" Margin="10 0 10 10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" />
                                 <ColumnDefinition Width="*" />
@@ -166,7 +160,7 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <Grid Grid.Row="2" Height="30">
+                <Grid Grid.Row="1" Height="30">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />

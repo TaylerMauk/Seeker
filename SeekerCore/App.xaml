@@ -38,6 +38,39 @@
                 <Setter Property="Padding" Value="0" />
             </Style>
 
+            <Style x:Key="LoadingAnimationStyle" TargetType="{x:Type Rectangle}">
+                <Setter Property="Fill" Value="{DynamicResource TextLightBrush}" />
+                <Setter Property="Height" Value="1" />
+                <Setter Property="Width" Value="0" />
+                <Setter Property="Opacity" Value="0" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=IsVisible}" Value="True">
+                        <DataTrigger.EnterActions>
+                            <RemoveStoryboard BeginStoryboardName="Loading" />
+                            <BeginStoryboard x:Name="Loading">
+                                <Storyboard>
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Width" Duration="0:0:2" RepeatBehavior="Forever">
+                                        <EasingDoubleKeyFrame Value="0" />
+                                        <EasingDoubleKeyFrame Value="75" KeyTime="0:0:0.5" />
+                                        <EasingDoubleKeyFrame Value="150" KeyTime="0:0:1" />
+                                        <EasingDoubleKeyFrame Value="250" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Duration="0:0:2" RepeatBehavior="Forever">
+                                        <EasingDoubleKeyFrame Value="1" KeyTime="0:0:0.5" />
+                                        <EasingDoubleKeyFrame Value="0" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </DataTrigger.EnterActions>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=IsVisible}" Value="False">
+                        <DataTrigger.EnterActions>
+                            <StopStoryboard BeginStoryboardName="Loading" />
+                        </DataTrigger.EnterActions>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
             <Thickness x:Key="ShadowRadius">10</Thickness>
             <System:Double x:Key="ShadowRadiusDouble">10</System:Double>
         </ResourceDictionary>

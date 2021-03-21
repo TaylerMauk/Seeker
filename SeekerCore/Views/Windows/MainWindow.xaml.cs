@@ -54,6 +54,7 @@ namespace SeekerCore.Views.Windows
 
 
             DataContext = m_mainViewModel;
+            loadingIndicator.DataContext = m_mainViewModel.SearchViewModel;
             gridSearchParams.DataContext = m_mainViewModel.SearchViewModel;
             gridSearchResults.DataContext = m_mainViewModel.ResultsViewModel;
             txtBlockResultsCount.DataContext = m_mainViewModel.ResultsViewModel;
