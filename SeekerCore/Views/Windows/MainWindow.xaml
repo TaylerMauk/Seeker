@@ -31,12 +31,12 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Window icon -->
-                <Image Grid.Column="0" Width="22" Height="22" Margin="4" Source="" />
+                <Image Grid.Column="0" Source="/Icons/16x16.png" Width="12" Height="12" Margin="5 0 0 0" VerticalAlignment="Center" />
 
                 <!-- Window name -->
                 <TextBlock
 		            Grid.Column="1"
-		            Margin="4 0 0 0"
+		            Margin="10 5"
 		            VerticalAlignment="Center"
 		            FontSize="14"
 		            Text="{Binding Path=Title, RelativeSource={RelativeSource FindAncestor,AncestorType=Window}}"

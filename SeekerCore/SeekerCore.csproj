@@ -4,6 +4,8 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Icons\seeker.ico</ApplicationIcon>
+    <AssemblyName>Seeker</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -13,6 +15,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>D:\Development Projects\C#\Seeker\bin\$(Configuration)</OutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Icons\16x16.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icons\16x16.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SeekerFilesystem\SeekerFilesystem.vcxproj" />
